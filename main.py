@@ -1,4 +1,5 @@
 from circuit.circuit import Circuit
+from calculator.calculator import calculate_total_resistance
 from circuit.elements.battery import Battery
 from circuit.elements.resistor import Resistor
 
@@ -86,9 +87,4 @@ if __name__ == "__main__":
                     unconnected_ports.remove((connected_element, connected_port))
             else:
                 print("Cant find the element")
-    print(circuit.connections)
-
-
-    
-
-        
+    calculate_total_resistance(circuit)

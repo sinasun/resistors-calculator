@@ -8,21 +8,27 @@ class Circuit:
 
     def add_connection(self, element_a, port_a, element_b, port_b):
         group_found = False
-        element_a_name = element_a.get_element(port_a)
-        element_b_name = element_b.get_element(port_b)
 
         for group in self.connections:
-            if element_a_name in group:
-                group.append(element_b_name)
+            if group == [element_a, port_a]:
+                group.append([element_b, port_b])
                 group_found = True
                 
                 break
             
-            if element_b_name in group:
-                group.append(element_a_name)
+            if group == [element_b, port_b]:
+                group.append([element_a, port_a])
                 group_found = True
 
                 break
 
         if not group_found:
-            self.connections.append([element_a_name, element_b_name])
+            self.connections.append([[element_a, port_a], [element_b, port_b]])
+
+    def remove_element(self, element):
+        pass
+
+    def replace_element(self, element_a, element_b):
+        pass
+
+
