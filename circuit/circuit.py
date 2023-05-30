@@ -9,7 +9,6 @@ class Circuit:
         self.last_element += 1
 
     def delete_element(self, element):
-        print(f"Delete element {element.number}")
         if element in self.elements:
             self.elements.remove(element)
 
@@ -41,22 +40,13 @@ class Circuit:
 
 
     def delete_connection(self, element, port):
-        print(f"Delete connection {element.number} {port}")
-
-        print("Connections before delete:")
-        self.print_connections()
         self.connections = [
             [item for item in group if not (item[0] == element and item[1] == port)]
             for group in self.connections
             ]
         self.connections = [[item for item in group] for group in self.connections if len(group) > 0]
-        print("Connections after delete:")
-        self.print_connections()
 
     def replace_connection(self, element_a, port_a, element_b, port_b):
-        print(f"replace connection {element_a.number} {port_a} with {element_b.number} {port_b}")
-        print("Connection before replace:")
-        self.print_connections()
         updated_connections = []
         for group in self.connections:
             updated_group = []
@@ -67,8 +57,6 @@ class Circuit:
                 updated_group.append(item)
             updated_connections.append(updated_group)
             self.connections = updated_connections
-        print("Connections after replace:")
-        self.print_connections()
 
     def print_connections(self):
         for i, group in enumerate(self.connections):

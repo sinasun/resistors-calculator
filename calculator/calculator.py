@@ -1,18 +1,16 @@
-from .utils import *
 from circuit.elements.resistor import Resistor
 def check_short_path(circuit):
-
     resistors_with_both_ports = set()
     for group in circuit.connections:
         resistors = set(item[0] for item in group if item[0].get_type() == "resistor")
-        if 'a' in group and 'b' in group:
-            resistors_with_both_ports.update(resistors)
-    
-    if resistors_with_both_ports:
-        print("Short Path Found")
-        print(resistors_with_both_ports)
-        for resistor in resistors_with_both_ports:
-            circuit.delete_element(resistor)
+        for resistor in resistors:
+            if [resistor, 'a'] in group and [resistor, 'b'] in group:
+                resistors_with_both_ports.update(resistors)
+                print(f"Short Path Found for {resistor.number}")
+
+                circuit.delete_element(resistor)
+                circuit.delete_connection(resistor, 'a')
+                circuit.delete_connection(resistor, 'b')
 
 
 def check_series(circuit):
@@ -20,12 +18,12 @@ def check_series(circuit):
         resistors = [[resistor, port] for resistor, port in group if resistor.get_type() == "resistor"]
         if len(resistors) == 2 and len(group) == 2:
             print("Series Found:")
-            print(resistors)
         
             total_resistance = 0
             
             for element in resistors:
                 resistor = element[0]
+                print(resistor.number)
                 circuit.delete_element(resistor)
 
                 total_resistance += resistor.resistance
@@ -55,24 +53,21 @@ def check_parallel(circuit):
                 resistance_sum = 0
                 if len(common_resistors) >= 2:
                     print("Parallel found: ")
-                    print(common_resistors)
+
                     for common_resistor in common_resistors:
+                        print(common_resistor.number)
                         circuit.delete_element(common_resistor)
                         circuit.delete_connection(common_resistor, 'a')
                         if [common_resistor, 'a'] in group1:
-                            print("a, group1")
                             group1.remove([common_resistor, 'a'])
                         if [common_resistor, 'a'] in group2:
-                            print("a, group2")
                             group2.remove([common_resistor, 'a'])
 
                         circuit.delete_connection(common_resistor, 'b')
                         if [common_resistor, 'b'] in group1:
-                            print("b, group1")
                             group1.remove([common_resistor, 'b'])
 
                         if [common_resistor, 'b'] in group2:
-                            print("b, group2")
                             group2.remove([common_resistor, 'b'])
 
 
@@ -89,16 +84,15 @@ def check_parallel(circuit):
 
 
 def calculate_total_resistance(circuit):
-    maxn = 0
-    while maxn < 5 and len(circuit.connections) != 2 or len(circuit.connections[0]) != 2 or len(circuit.connections[1]) != 2:
-        maxn += 1
+    while len(circuit.connections) != 2 or len(circuit.connections[0]) != 2 or len(circuit.connections[1]) != 2:
         check_short_path(circuit)
         check_series(circuit)
+        check_short_path(circuit)
         check_parallel(circuit)
-        print("All elements:")
-        for element in circuit.elements:
-            if element.get_type() == "resistor":
-                print(f"Resistor {element.number}")
-                print(element.resistance)
-        print("All connections:")
-        circuit.print_connections()
+    print("\nAll elements:")
+    for element in circuit.elements:
+        if element.get_type() == "resistor":
+            print(f"Resistor {element.number}")
+            print(element.resistance)
+    print("All connections:")
+    circuit.print_connections()
