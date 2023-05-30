@@ -2,21 +2,28 @@ class Circuit:
     def __init__(self):
         self.elements = []
         self.connections = []
+        self.last_element = 0
 
     def add_element(self, element):
         self.elements.append(element)
+        self.last_element += 1
+
+    def delete_element(self, element):
+        print(f"Delete element {element.number}")
+        if element in self.elements:
+            self.elements.remove(element)
 
     def add_connection(self, element_a, port_a, element_b, port_b):
         group_found = False
 
         for group in self.connections:
-            if group == [element_a, port_a]:
+            if [element_a, port_a] in group:
                 group.append([element_b, port_b])
                 group_found = True
                 
                 break
             
-            if group == [element_b, port_b]:
+            if [element_b, port_b] in group:
                 group.append([element_a, port_a])
                 group_found = True
 
@@ -25,10 +32,46 @@ class Circuit:
         if not group_found:
             self.connections.append([[element_a, port_a], [element_b, port_b]])
 
-    def remove_element(self, element):
-        pass
 
-    def replace_element(self, element_a, element_b):
-        pass
+    def add_connection_to_group(self, element, port, group):
+        for group2 in self.connections:
+            if group2 == group:
+                group2.append([element, port])
+                break
 
 
+    def delete_connection(self, element, port):
+        print(f"Delete connection {element.number} {port}")
+
+        print("Connections before delete:")
+        self.print_connections()
+        self.connections = [
+            [item for item in group if not (item[0] == element and item[1] == port)]
+            for group in self.connections
+            ]
+        self.connections = [[item for item in group] for group in self.connections if len(group) > 0]
+        print("Connections after delete:")
+        self.print_connections()
+
+    def replace_connection(self, element_a, port_a, element_b, port_b):
+        print(f"replace connection {element_a.number} {port_a} with {element_b.number} {port_b}")
+        print("Connection before replace:")
+        self.print_connections()
+        updated_connections = []
+        for group in self.connections:
+            updated_group = []
+            for item in group:
+                if item[0] == element_a and item[1] == port_a:
+                    updated_group.append([element_b, port_b])
+                    continue
+                updated_group.append(item)
+            updated_connections.append(updated_group)
+            self.connections = updated_connections
+        print("Connections after replace:")
+        self.print_connections()
+
+    def print_connections(self):
+        for i, group in enumerate(self.connections):
+            print(f"Connection group {i}")
+            for item in group:
+                print(f"{item[0].get_type()} {item[0].number} {item[1]}")

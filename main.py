@@ -87,4 +87,7 @@ if __name__ == "__main__":
                     unconnected_ports.remove((connected_element, connected_port))
             else:
                 print("Cant find the element")
+
     calculate_total_resistance(circuit)
+
+
