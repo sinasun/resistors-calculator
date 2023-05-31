@@ -1,4 +1,5 @@
 from circuit.elements.resistor import Resistor
+
 def check_short_path(circuit):
     resistors_with_both_ports = set()
     for group in circuit.connections:
@@ -11,7 +12,6 @@ def check_short_path(circuit):
                 circuit.delete_element(resistor)
                 circuit.delete_connection(resistor, 'a')
                 circuit.delete_connection(resistor, 'b')
-
 
 def check_series(circuit):
     for group in circuit.connections:
@@ -81,18 +81,14 @@ def check_parallel(circuit):
                     circuit.add_connection_to_group(new_resistor, 'b', group2)
                     break
 
-
-
 def calculate_total_resistance(circuit):
     while len(circuit.connections) != 2 or len(circuit.connections[0]) != 2 or len(circuit.connections[1]) != 2:
         check_short_path(circuit)
         check_series(circuit)
         check_short_path(circuit)
         check_parallel(circuit)
-    print("\nAll elements:")
     for element in circuit.elements:
         if element.get_type() == "resistor":
-            print(f"Resistor {element.number}")
+            print(f"Total Resitance")
             print(element.resistance)
-    print("All connections:")
-    circuit.print_connections()
+

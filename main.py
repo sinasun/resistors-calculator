@@ -1,8 +1,7 @@
-from circuit.circuit import Circuit
 from calculator.calculator import calculate_total_resistance
+from circuit.circuit import Circuit
 from circuit.elements.battery import Battery
 from circuit.elements.resistor import Resistor
-
 
 def get_int(prompt):
     while True:
@@ -11,7 +10,6 @@ def get_int(prompt):
             return inp
         except ValueError:
             print("Invalid input. Please enter an integer.")
-
 
 if __name__ == "__main__":
     circuit = Circuit()
@@ -89,5 +87,3 @@ if __name__ == "__main__":
                 print("Cant find the element")
 
     calculate_total_resistance(circuit)
-
-
