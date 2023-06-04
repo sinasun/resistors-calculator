@@ -13,7 +13,7 @@ This Python project is designed to calculate the total resistance of an electric
 
 ## How to Use
 
-1. Run the Python script `circuit_resistance_calculator.py`.
+1. Run the Python script `main.py`.
 
 2. When prompted, enter the number of elements in the circuit.
 
